@@ -1,0 +1,6 @@
+rootProject.name = 'CertificateSystemAdvanced'
+include 'api'
+include 'core'
+
+
+
