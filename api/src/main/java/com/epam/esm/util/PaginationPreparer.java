@@ -45,6 +45,7 @@ public class PaginationPreparer {
     }
 
     private long calculatePageCount(Map<String, String> params, long entityCount) {
-        return (long) Math.ceil(entityCount / Double.parseDouble(params.get("size")));
+        long pageCount = (long) Math.ceil(entityCount / Double.parseDouble(params.get("size")));
+        return pageCount==0?1:pageCount;
     }
 }

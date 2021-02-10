@@ -42,7 +42,7 @@ public class TagServiceImpl implements TagService {
         basicValidator.validateIdIsPositive(id);
         Tag tag = tagRepository.findTagById(id);
         if (tag == null) {
-            throw new EntityNotFoundException(ExceptionCode.NON_EXISTING_TAG.getErrorCode(), id);
+            throw new EntityNotFoundException(ExceptionCode.NON_EXISTING_TAG.getErrorCode(), String.valueOf(id));
         }
         return tagMapper.toDTO(tag);
     }
@@ -67,7 +67,7 @@ public class TagServiceImpl implements TagService {
         basicValidator.validateIdIsPositive(id);
         Tag tag = tagRepository.findTagById(id);
         if (tag == null) {
-            throw new EntityNotFoundException(ExceptionCode.NON_EXISTING_TAG.getErrorCode(), id);
+            throw new EntityNotFoundException(ExceptionCode.NON_EXISTING_TAG.getErrorCode(), String.valueOf(id));
         }
         tagRepository.deleteTag(tag);
     }
@@ -93,5 +93,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public long getCount() {
         return tagRepository.getCount();
+    }
+
+    @Override
+    public TagDto getMostUsedTagOfUserWithHighestCostOfOrders() {
+        return tagMapper.toDTO(tagRepository.getMostUsedTagOfUserWithHighestCostOfOrders());
     }
 }

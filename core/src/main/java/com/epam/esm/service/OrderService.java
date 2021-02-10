@@ -1,13 +1,15 @@
 package com.epam.esm.service;
 
+import com.epam.esm.dto.NewOrderDto;
 import com.epam.esm.dto.OrderDto;
+import com.epam.esm.repository.specification.SearchSpecification;
 
 import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
 
-    OrderDto addOrder(Map<String, Object> fields);
+    OrderDto addOrder(NewOrderDto newOrderDto);
 
     List<OrderDto> getOrders(Map<String, String> params);
 

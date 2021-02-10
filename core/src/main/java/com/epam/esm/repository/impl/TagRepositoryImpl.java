@@ -17,6 +17,25 @@ public class TagRepositoryImpl implements TagRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final static String SELECT_MOST_USED_TAG =
+            "WITH user_with_biggest_cost AS (SELECT SUM(cost) AS orders_cost,\n" +
+                    "                                        user_id   AS ui\n" +
+                    "                                 FROM orders\n" +
+                    "                                 GROUP BY user_id\n" +
+                    "                                 ORDER BY orders_cost DESC\n" +
+                    "                                 LIMIT 1)\n" +
+                    "SELECT tags.id,\n" +
+                    "       tags.name\n" +
+                    "FROM tags\n" +
+                    "         JOIN certificates_tags ON tags.id = certificates_tags.tags_id\n" +
+                    "         JOIN certificates ON certificates_tags.certificates_id = certificates.id\n" +
+                    "         JOIN orders_certificates ON certificates.id = orders_certificates.certificates_id\n" +
+                    "         JOIN orders ON orders_certificates.orders_id = orders.id\n" +
+                    "         JOIN user_with_biggest_cost on orders.user_id = user_with_biggest_cost.ui\n" +
+                    "GROUP BY (tags.id)\n" +
+                    "ORDER BY COUNT(tags.id) DESC\n" +
+                    "LIMIT 1;";
+
 
     @Override
     public List<Tag> findAllTags(int limit, int offset) {
@@ -62,5 +81,10 @@ public class TagRepositoryImpl implements TagRepository {
         CriteriaQuery<Long> count = criteriaBuilder.createQuery(Long.class);
         count.select(criteriaBuilder.count(count.from(Tag.class)));
         return entityManager.createQuery(count).getSingleResult();
+    }
+
+    @Override
+    public Tag getMostUsedTagOfUserWithHighestCostOfOrders() {
+        return (Tag) entityManager.createNativeQuery(SELECT_MOST_USED_TAG).getSingleResult();
     }
 }

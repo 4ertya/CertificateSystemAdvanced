@@ -22,22 +22,20 @@ subprojects {
 
         implementation 'org.springframework.boot:spring-boot-starter-hateoas'
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
+        implementation group: 'org.springframework', name: 'spring-orm', version: '5.2.12.RELEASE'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
         runtimeOnly 'org.postgresql:postgresql'
         implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
         implementation 'org.hibernate:hibernate-entitymanager:5.4.27.Final'
-
-        compile 'org.modelmapper:modelmapper:2.3.9'
-
-        compile group: 'org.springframework', name: 'spring-orm', version: '5.2.12.RELEASE'
+        implementation 'org.hibernate:hibernate-envers:5.4.27.Final'
 
 
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'org.modelmapper:modelmapper:2.3.9'
         implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 
-        implementation group: 'org.apache.commons', name: 'commons-lang3', version: findProperty("commons-lang3.version")
+        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     }
 
     test {

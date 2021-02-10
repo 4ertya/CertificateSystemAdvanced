@@ -21,4 +21,5 @@ public interface CertificateRepository {
     void deleteCertificate(Certificate certificate);
 
     long getCount(List<Specification> specifications);
+
 }

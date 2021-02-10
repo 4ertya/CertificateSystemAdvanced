@@ -1,9 +1,10 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.NewOrderDto;
 import com.epam.esm.dto.OrderDto;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.util.HateoasBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,25 +18,27 @@ import java.util.Map;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
+    private final HateoasBuilder hateoasBuilder;
 
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDto createOrder(@RequestBody Map<String, Object> fields) {
-        return orderService.addOrder(fields);
+    public OrderDto createOrder(@RequestBody NewOrderDto newOrderDto) {
+        OrderDto orderDTO = orderService.addOrder(newOrderDto);
+        return hateoasBuilder.addLinksForOrder(orderDTO);
     }
 
 
     @GetMapping
-    public List<OrderDto> getAllOrders(@RequestParam Map<String, String> params) {
+    public RepresentationModel<?> getAllOrders(@RequestParam Map<String, String> params) {
         List<OrderDto> orders = orderService.getOrders(params);
         long ordersCount = orderService.getCount(params);
-        return orders;
+        return hateoasBuilder.addLinksForListOfOrders(orders, params, ordersCount);
     }
 
     @GetMapping("/{id}")
     public OrderDto getOrderById(@PathVariable("id") long id) {
         OrderDto orderDTO = orderService.getOrderById(id);
-        return orderDTO;
+        return hateoasBuilder.addLinksForOrder(orderDTO);
     }
 }

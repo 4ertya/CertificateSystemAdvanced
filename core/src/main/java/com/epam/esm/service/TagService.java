@@ -13,4 +13,5 @@ public interface TagService {
     void deleteTag(long id);
     TagDto updateTag(TagDto tag);
     long getCount();
+    TagDto getMostUsedTagOfUserWithHighestCostOfOrders();
 }

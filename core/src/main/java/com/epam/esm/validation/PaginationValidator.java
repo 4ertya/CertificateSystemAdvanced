@@ -18,7 +18,7 @@ public class PaginationValidator {
         int page = Integer.parseInt(params.get(Constant.PAGE_PARAM));
         int size = Integer.parseInt(params.get(Constant.SIZE_PARAM));
         int totalPagesAmount = (int) Math.ceil(elementsCount / (double) size);
-        if (page > totalPagesAmount) {
+        if (page > totalPagesAmount&&page>1) {
             throw new ValidationException(
                     ExceptionCode.PAGE_IS_GREATER_THAN_TOTAL_AMOUNT_OF_PAGES.getErrorCode(),
                     Constant.PAGE_PARAM + Constant.EQUAL_SIGN + page);

@@ -2,6 +2,7 @@ package com.epam.esm.validation;
 
 import com.epam.esm.exception.ExceptionCode;
 import com.epam.esm.exception.ValidationException;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -44,7 +45,7 @@ public class BasicValidator {
     }
 
     private void validateOrderByValue(String value) {
-        if (!orderByValues.contains(value)) {
+        if (!orderByValues.contains(value.toLowerCase().trim())) {
             throw new ValidationException(ExceptionCode.INVALID_ORDER_BY_VALUE.getErrorCode(), value);
         }
     }
@@ -56,15 +57,23 @@ public class BasicValidator {
         }
     }
 
-    public void validateNonNull(Object object, String className) {
+    public void validateNonNull(Object object, String value) {
         if (object == null) {
-            throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), className);
+            throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), value);
         }
     }
 
     public void validateStringField(String string, String field) {
         if (!StringUtils.hasText(string)) {
             throw new ValidationException(ExceptionCode.CANNOT_BE_EMPTY.getErrorCode(), field);
+        }
+    }
+
+    public void validateOrderParams(Map<String, String> params) {
+        if (params.containsKey(Constants.USER_ID)) {
+            if (NumberUtils.isParsable(params.get(Constants.USER_ID))) {
+                validateIdIsPositive(Long.parseLong(params.get(Constants.USER_ID)));
+            }
         }
     }
 
@@ -78,5 +87,6 @@ public class BasicValidator {
         private static final String EQUAL_SIGN = " = ";
         private static final String COMMA = ",";
         private static final String TAG_PARAM = "tag";
+        private static final String USER_ID = "userId";
     }
 }

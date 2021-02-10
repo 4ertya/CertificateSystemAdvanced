@@ -5,6 +5,11 @@ import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.specification.SearchSpecification;
 import com.epam.esm.repository.specification.SortSpecification;
 import com.epam.esm.repository.specification.Specification;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -25,12 +30,14 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @Override
     public List<Certificate> findAllCertificates(List<Specification> specifications, int limit, int offset) {
+        System.out.println(entityManager.getDelegate());
         return entityManager.createQuery(buildCriteriaQuery(specifications))
                 .setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
     public Certificate findCertificateById(long id) {
+        System.out.println(entityManager.getDelegate());
         return entityManager.find(Certificate.class, id);
     }
 
@@ -71,5 +78,16 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         });
         criteriaQuery.where(predicateList.toArray(new Predicate[0])).groupBy(root.get("id"));
         return criteriaQuery;
+    }
+
+
+
+    public List audit(long id) {
+        AuditReader reader = AuditReaderFactory.get(entityManager);
+        AuditQuery query = reader.createQuery().forRevisionsOfEntity(Certificate.class, true, true);
+        query.add(AuditEntity.id().eq(id));
+        query.addOrder(AuditEntity.revisionNumber().desc());
+
+        return query.getResultList();
     }
 }

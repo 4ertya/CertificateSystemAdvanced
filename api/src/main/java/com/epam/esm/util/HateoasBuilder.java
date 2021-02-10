@@ -1,9 +1,13 @@
 package com.epam.esm.util;
 
 import com.epam.esm.controller.CertificateController;
+import com.epam.esm.controller.OrderController;
 import com.epam.esm.controller.TagController;
+import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.CertificateDto;
+import com.epam.esm.dto.OrderDto;
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -21,7 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 @RequiredArgsConstructor
-public class HateaosBuilder {
+public class HateoasBuilder {
     private final PaginationPreparer paginationPreparer;
 
     public RepresentationModel<?> addLinksForListOfTagDTOs(List<TagDto> tags, Map<String, String> params, long tagsCount) {
@@ -46,8 +50,6 @@ public class HateaosBuilder {
     }
 
 
-
-
     public RepresentationModel<?> addLinksForListOfCertificates(List<CertificateDto> certificates, Map<String, String> params, long certificatesCount) {
         certificates.forEach(certificate -> certificate.add(linkTo(methodOn(CertificateController.class)
                 .findCertificateById(certificate.getId()))
@@ -56,14 +58,16 @@ public class HateaosBuilder {
         List<Link> links = paginationPreparer.preparePaginationLinks(
                 methodOn(CertificateController.class).findAllCertificates(params),
                 params, certificatesCount);
-        links.add(createLinkToGetCertificates("orderBy",
-                "name", "sort by name asc"));
-        links.add(createLinkToGetCertificates("orderBy",
-                "-name", "sort by name desc"));
-        links.add(createLinkToGetCertificates("orderBy",
-                "date", "sort by create date asc"));
-        links.add(createLinkToGetCertificates("orderBy",
-                "-date", "sort by create date desc"));
+        if (!certificates.isEmpty()&&certificates.size()>1) {
+            links.add(createLinkToGetCertificates("orderBy",
+                    "name", "sort by name asc"));
+            links.add(createLinkToGetCertificates("orderBy",
+                    "-name", "sort by name desc"));
+            links.add(createLinkToGetCertificates("orderBy",
+                    "date", "sort by create date asc"));
+            links.add(createLinkToGetCertificates("orderBy",
+                    "-date", "sort by create date desc"));
+        }
         CollectionModel<CertificateDto> collectionModel = CollectionModel.of(certificates);
         return buildModel(collectionModel, links, page);
     }
@@ -73,6 +77,52 @@ public class HateaosBuilder {
                 .findTagById(tag.getId()))
                 .withSelfRel()));
         return certificateDto;
+    }
+
+    public RepresentationModel<?> addLinksForListOfUsers(List<UserDto> users, Map<String, String> params, long usersCount) {
+        users.forEach(user -> user.add(linkTo(methodOn(UserController.class)
+                .getUserById(user.getId()))
+                .withSelfRel()));
+        Map<String, Long> page = paginationPreparer.preparePageInfo(params, usersCount);
+        List<Link> links = paginationPreparer.preparePaginationLinks(
+                methodOn(UserController.class).getUsers(params), params, usersCount);
+        CollectionModel<UserDto> collectionModel = CollectionModel.of(users);
+        return buildModel(collectionModel, links, page);
+    }
+
+    public UserDto addLinksForUser(UserDto userDto) {
+        userDto.add(linkTo(methodOn(UserController.class)
+                .getUserById(userDto.getId()))
+                .withSelfRel());
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", String.valueOf(userDto.getId()));
+        userDto.add(linkTo(methodOn(OrderController.class)
+                .getAllOrders(params))
+                .withRel("orders"));
+        return userDto;
+    }
+
+    public RepresentationModel<?> addLinksForListOfOrders(List<OrderDto> orders, Map<String, String> params, long ordersCount) {
+        orders.forEach(order -> order.add(linkTo(methodOn(OrderController.class)
+                .getOrderById(order.getId()))
+                .withSelfRel()));
+        Map<String, Long> page = paginationPreparer.preparePageInfo(params, ordersCount);
+        List<Link> links = paginationPreparer.preparePaginationLinks(
+                methodOn(OrderController.class).getAllOrders(params), params, ordersCount);
+        CollectionModel<OrderDto> collectionModel = CollectionModel.of(orders);
+        return buildModel(collectionModel, links, page);
+    }
+
+    public OrderDto addLinksForOrder(OrderDto orderDto) {
+        orderDto.getCertificates().forEach(certificate -> certificate.add(linkTo(methodOn(CertificateController.class)
+                .findCertificateById(certificate.getId()))
+                .withSelfRel()));
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", String.valueOf(orderDto.getUserId()));
+        orderDto.add(linkTo(methodOn(OrderController.class)
+                .getAllOrders(params))
+                .withRel("users orders"));
+        return orderDto;
     }
 
     private Link createLinkToGetCertificates(String param, String value, String rel) {
@@ -90,4 +140,6 @@ public class HateaosBuilder {
                 .embed(embeddedEntity, LinkRelation.of("page"))
                 .build();
     }
+
+
 }

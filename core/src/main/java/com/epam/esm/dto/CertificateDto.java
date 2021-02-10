@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import javax.persistence.OrderBy;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;

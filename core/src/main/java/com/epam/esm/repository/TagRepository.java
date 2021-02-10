@@ -21,4 +21,6 @@ public interface TagRepository {
     void deleteTag(Tag tag);
 
     long getCount();
+
+    Tag getMostUsedTagOfUserWithHighestCostOfOrders();
 }

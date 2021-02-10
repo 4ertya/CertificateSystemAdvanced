@@ -9,7 +9,7 @@ import javax.persistence.criteria.Root;
 
 public class GetOrdersByUserId implements SearchSpecification {
 
-    private final int userId;
+    private int userId;
 
     public GetOrdersByUserId(int userId) {
         this.userId = userId;
@@ -20,3 +20,4 @@ public class GetOrdersByUserId implements SearchSpecification {
         return criteriaBuilder.equal(root.get("userId"), userId);
     }
 }
+

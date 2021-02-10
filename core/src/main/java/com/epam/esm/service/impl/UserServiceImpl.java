@@ -1,6 +1,8 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dto.UserDto;
+import com.epam.esm.exception.EntityNotFoundException;
+import com.epam.esm.exception.ExceptionCode;
 import com.epam.esm.mapper.UserMapper;
 import com.epam.esm.model.User;
 import com.epam.esm.repository.UserRepository;
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(long id) {
         User user = userRepository.getUserById(id);
+        if (user==null){
+            throw new EntityNotFoundException(ExceptionCode.NON_EXISTING_USER.getErrorCode(), String.valueOf(id));
+        }
         return userMapper.toDTO(user);
     }
 

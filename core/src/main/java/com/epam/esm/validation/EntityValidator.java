@@ -1,6 +1,7 @@
 package com.epam.esm.validation;
 
 import com.epam.esm.dto.CertificateDto;
+import com.epam.esm.dto.NewOrderDto;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.exception.ExceptionCode;
 import com.epam.esm.exception.ValidationException;
@@ -9,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -20,7 +23,7 @@ public class EntityValidator {
     private Set<String> certificateFieldNames;
 
     {
-        certificateFieldNames=new HashSet<>();
+        certificateFieldNames = new HashSet<>();
         certificateFieldNames.add(Constant.NAME_FIELD);
         certificateFieldNames.add(Constant.DESCRIPTION_FIELD);
         certificateFieldNames.add(Constant.PRICE_FIELD);
@@ -46,7 +49,7 @@ public class EntityValidator {
         if (price == null) {
             throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), "price");
         }
-        if (price.doubleValue() < 0) {
+        if (price.doubleValue() <= 0) {
             throw new ValidationException(ExceptionCode.SHOULD_BE_POSITIVE.getErrorCode(), "price = " + price);
         }
         if (price.doubleValue() > 999999999.99) {
@@ -65,11 +68,21 @@ public class EntityValidator {
         }
     }
 
-private static class Constant{
-    private static final String NAME_FIELD = "name";
-    private static final String DESCRIPTION_FIELD = "description";
-    private static final String TAGS_FIELD = "tags";
-    private static final String DURATION_FIELD = "duration";
-    private static final String PRICE_FIELD = "price";
-}
+    public void validateOrder(NewOrderDto newOrderDto) {
+        basicValidator.validateNonNull(newOrderDto.getUserId(), "userId");
+        basicValidator.validateNonNull(newOrderDto.getCertificatesId(), "certificatesId");
+        basicValidator.validateIdIsPositive(newOrderDto.getUserId());
+        if (newOrderDto.getCertificatesId().isEmpty()) {
+            throw new ValidationException(ExceptionCode.CANNOT_BE_EMPTY.getErrorCode(), "certificatesId");
+        }
+    }
+
+
+    private static class Constant {
+        private static final String NAME_FIELD = "name";
+        private static final String DESCRIPTION_FIELD = "description";
+        private static final String TAGS_FIELD = "tags";
+        private static final String DURATION_FIELD = "duration";
+        private static final String PRICE_FIELD = "price";
+    }
 }

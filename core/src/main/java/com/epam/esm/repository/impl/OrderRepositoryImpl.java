@@ -4,6 +4,7 @@ import com.epam.esm.model.Order;
 import com.epam.esm.model.User;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.specification.SearchSpecification;
+import com.epam.esm.repository.specification.Specification;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,12 +28,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> getOrders(int limit, int offset) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
-        criteriaQuery.from(Order.class);
-        return entityManager.createQuery(criteriaQuery).setMaxResults(limit).setFirstResult(offset).getResultList();
-
+    public List<Order> getOrders(List<SearchSpecification> specifications, int limit, int offset) {
+        return entityManager.createQuery(buildCriteriaQuery(specifications))
+                .setMaxResults(limit)
+                .setFirstResult(offset)
+                .getResultList();
     }
 
     private CriteriaQuery<Order> buildCriteriaQuery(List<SearchSpecification> specifications) {
@@ -51,10 +51,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public long getCount() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        criteriaQuery.select(criteriaBuilder.count(criteriaQuery.from(Order.class)));
-        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    public long getCount(List<SearchSpecification> specifications) {
+        CriteriaQuery<Order> criteriaQuery = buildCriteriaQuery(specifications);
+        return entityManager.createQuery(criteriaQuery).getResultStream().count();
     }
 }
