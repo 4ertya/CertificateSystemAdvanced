@@ -16,7 +16,7 @@ public class SortCertificatesAscending implements SortSpecification {
     }
 
     @Override
-    public <T> Order toOrder(CriteriaBuilder criteriaBuilder, Root<T> root) {
+    public Order toOrder(CriteriaBuilder criteriaBuilder, Root root) {
         return criteriaBuilder.asc(root.get(field));
     }
 }

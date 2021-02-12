@@ -18,15 +18,15 @@ import java.util.Set;
 @NoArgsConstructor
 public class Certificate {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "certificates_seq")
+    @SequenceGenerator(name="certificates_seq",
+            sequenceName="certificates_id_seq", allocationSize=1)
     private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer duration;
-    @Column(name = "create_date")
     private LocalDateTime createDate;
-    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany(fetch = FetchType.LAZY)

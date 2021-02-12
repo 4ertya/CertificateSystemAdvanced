@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -33,13 +31,13 @@ public class EntityValidator {
 
     public void validateTag(TagDto tagDto) {
         basicValidator.validateNonNull(tagDto, Tag.class.getSimpleName());
-        basicValidator.validateStringField(tagDto.getName(), "tag name");
+        basicValidator.validateStringField(tagDto.getName(), Constant.TAG_NAME);
     }
 
     public void validateCertificate(CertificateDto certificateDto) {
         basicValidator.validateNonNull(certificateDto, CertificateDto.class.getName());
-        basicValidator.validateStringField(certificateDto.getName(), "certificate name");
-        basicValidator.validateStringField(certificateDto.getDescription(), "description");
+        basicValidator.validateStringField(certificateDto.getName(), Constant.CERTIFICATE_NAME);
+        basicValidator.validateStringField(certificateDto.getDescription(), Constant.DESCRIPTION_FIELD);
         validatePrice(certificateDto.getPrice());
         validateDuration(certificateDto.getDuration());
     }
@@ -47,33 +45,40 @@ public class EntityValidator {
 
     public void validatePrice(BigDecimal price) {
         if (price == null) {
-            throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), "price");
+            throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), Constant.PRICE_FIELD);
         }
         if (price.doubleValue() <= 0) {
-            throw new ValidationException(ExceptionCode.SHOULD_BE_POSITIVE.getErrorCode(), "price = " + price);
+            throw new ValidationException(ExceptionCode.SHOULD_BE_POSITIVE.getErrorCode(),
+                    Constant.PRICE_FIELD + Constant.EQUAL_SIGN + price);
         }
         if (price.doubleValue() > 999999999.99) {
-            throw new ValidationException(ExceptionCode.PRICE_TOO_HIGH.getErrorCode(), "price = " + price);
+            throw new ValidationException(ExceptionCode.PRICE_TOO_HIGH.getErrorCode(),
+                    Constant.PRICE_FIELD + Constant.EQUAL_SIGN + price);
         }
     }
 
-    public void validateDuration(int duration) {
+    public void validateDuration(Integer duration) {
+        if (duration ==null){
+            throw new ValidationException(ExceptionCode.CANNOT_BE_NULL.getErrorCode(), Constant.DURATION_FIELD);
+        }
         if (duration <= 0) {
             throw new ValidationException(
-                    ExceptionCode.SHOULD_BE_POSITIVE.getErrorCode(), "duration = " + duration);
+                    ExceptionCode.SHOULD_BE_POSITIVE.getErrorCode(),
+                    Constant.DURATION_FIELD + Constant.EQUAL_SIGN + duration);
         }
         if (duration > 366) {
             throw new ValidationException(
-                    ExceptionCode.DURATION_CANNOT_BE_MORE_THAN_YEAR.getErrorCode(), "duration = " + duration);
+                    ExceptionCode.DURATION_CANNOT_BE_MORE_THAN_YEAR.getErrorCode(),
+                    Constant.DURATION_FIELD + Constant.EQUAL_SIGN + duration);
         }
     }
 
     public void validateOrder(NewOrderDto newOrderDto) {
-        basicValidator.validateNonNull(newOrderDto.getUserId(), "userId");
-        basicValidator.validateNonNull(newOrderDto.getCertificatesId(), "certificatesId");
+        basicValidator.validateNonNull(newOrderDto.getUserId(), Constant.USER_ID);
+        basicValidator.validateNonNull(newOrderDto.getCertificatesId(), Constant.CERTIFICATES_ID);
         basicValidator.validateIdIsPositive(newOrderDto.getUserId());
         if (newOrderDto.getCertificatesId().isEmpty()) {
-            throw new ValidationException(ExceptionCode.CANNOT_BE_EMPTY.getErrorCode(), "certificatesId");
+            throw new ValidationException(ExceptionCode.CANNOT_BE_EMPTY.getErrorCode(), Constant.CERTIFICATES_ID);
         }
     }
 
@@ -84,5 +89,10 @@ public class EntityValidator {
         private static final String TAGS_FIELD = "tags";
         private static final String DURATION_FIELD = "duration";
         private static final String PRICE_FIELD = "price";
+        private static final String EQUAL_SIGN = " = ";
+        private static final String TAG_NAME = "tag name";
+        private static final String CERTIFICATE_NAME = "certificate name";
+        private static final String USER_ID = "userId";
+        private static final String CERTIFICATES_ID = "certificatesId";
     }
 }

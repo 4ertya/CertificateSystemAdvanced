@@ -1,10 +1,8 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.model.Order;
-import com.epam.esm.model.User;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.repository.specification.SearchSpecification;
-import com.epam.esm.repository.specification.Specification;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

@@ -4,10 +4,6 @@ public class ValidationException extends RuntimeException {
 
     private String description;
 
-    public ValidationException(String message) {
-        super(message);
-    }
-
     public ValidationException(String message, String description) {
         super(message);
         this.description = description;

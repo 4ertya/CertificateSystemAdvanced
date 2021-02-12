@@ -93,19 +93,16 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private Set<Tag> prepareTags(Set<TagDto> tags) {
-
         Set<Tag> prepared = new HashSet<>();
-        if (tags != null) {
-            tags.forEach(tagDto -> {
-                entityValidator.validateTag(tagDto);
-                Tag tag = tagRepository.findTagByName(tagDto.getName());
-                if (tag == null) {
-                    tagDto.setId(null);
-                    tag = tagRepository.createTag(tagMapper.toModel(tagDto));
-                }
-                prepared.add(tag);
-            });
-        }
+        tags.forEach(tagDto -> {
+            entityValidator.validateTag(tagDto);
+            Tag tag = tagRepository.findTagByName(tagDto.getName());
+            if (tag == null) {
+                tagDto.setId(null);
+                tag = tagRepository.createTag(tagMapper.toModel(tagDto));
+            }
+            prepared.add(tag);
+        });
         return prepared;
     }
 

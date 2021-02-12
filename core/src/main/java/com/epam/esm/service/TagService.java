@@ -7,7 +7,6 @@ import java.util.Map;
 
 public interface TagService {
     TagDto createTag(TagDto tagDto);
-    TagDto findTagByName(String name);
     List<TagDto> findAllTags(Map<String, String> params);
     TagDto findTagById(long id);
     void deleteTag(long id);

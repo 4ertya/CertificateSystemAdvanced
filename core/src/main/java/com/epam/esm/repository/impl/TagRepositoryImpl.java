@@ -16,7 +16,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
-
+    private final static String NAME = "name";
     private final static String SELECT_MOST_USED_TAG =
             "WITH user_with_biggest_cost AS (SELECT SUM(cost) AS orders_cost,\n" +
                     "                                        user_id   AS ui\n" +
@@ -50,7 +50,7 @@ public class TagRepositoryImpl implements TagRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
         Root<Tag> root = criteriaQuery.from(Tag.class);
-        criteriaQuery.where(criteriaBuilder.equal(root.get("name"), name));
+        criteriaQuery.where(criteriaBuilder.equal(root.get(NAME), name));
         return entityManager.createQuery(criteriaQuery).getResultStream().findFirst().orElse(null);
     }
 

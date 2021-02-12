@@ -10,6 +10,7 @@ import java.util.Map;
 @Component
 public class OrderSpecificationCreator {
     private List<SearchSpecification> specifications;
+    private final static String USER_ID = "userId";
 
     public List<SearchSpecification> generateQuery(Map<String, String> params) {
         specifications = new ArrayList<>();
@@ -19,7 +20,7 @@ public class OrderSpecificationCreator {
 
     private void appendQueryConditions(Map<String, String> params) {
         params.keySet().forEach(key -> {
-            if ("userId".equals(key)) {
+            if (USER_ID.equals(key)) {
                 specifications.add(new GetOrdersByUserId(Integer.parseInt(params.get(key))));
             }
         });

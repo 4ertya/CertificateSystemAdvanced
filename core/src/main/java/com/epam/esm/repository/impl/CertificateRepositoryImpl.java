@@ -5,11 +5,6 @@ import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.repository.specification.SearchSpecification;
 import com.epam.esm.repository.specification.SortSpecification;
 import com.epam.esm.repository.specification.Specification;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.AuditQuery;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,6 +22,8 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final static String ID = "id";
 
     @Override
     public List<Certificate> findAllCertificates(List<Specification> specifications, int limit, int offset) {
@@ -47,12 +44,6 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         return certificate;
     }
 
-    //not used
-    @Override
-    public void updateCertificate(Certificate certificate) {
-        entityManager.merge(certificate);
-    }
-
     @Override
     public void deleteCertificate(Certificate certificate) {
         entityManager.remove(certificate);
@@ -68,7 +59,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Certificate> criteriaQuery = criteriaBuilder.createQuery(Certificate.class);
         Root<Certificate> root = criteriaQuery.from(Certificate.class);
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("id")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get(ID)));
         List<Predicate> predicateList = new ArrayList<>();
         specifications.forEach(specification -> {
             if (specification instanceof SearchSpecification)
@@ -76,18 +67,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
             if (specification instanceof SortSpecification)
                 criteriaQuery.orderBy(((SortSpecification) specification).toOrder(criteriaBuilder, root));
         });
-        criteriaQuery.where(predicateList.toArray(new Predicate[0])).groupBy(root.get("id"));
+        criteriaQuery.where(predicateList.toArray(new Predicate[0])).groupBy(root.get(ID));
         return criteriaQuery;
-    }
-
-
-
-    public List audit(long id) {
-        AuditReader reader = AuditReaderFactory.get(entityManager);
-        AuditQuery query = reader.createQuery().forRevisionsOfEntity(Certificate.class, true, true);
-        query.add(AuditEntity.id().eq(id));
-        query.addOrder(AuditEntity.revisionNumber().desc());
-
-        return query.getResultList();
     }
 }

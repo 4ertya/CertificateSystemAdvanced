@@ -17,15 +17,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getUsers(int limit, int offset) {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-            criteriaQuery.from(User.class);
-            return entityManager.createQuery(criteriaQuery).setMaxResults(limit).setFirstResult(offset).getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        criteriaQuery.from(User.class);
+        return entityManager.createQuery(criteriaQuery).setMaxResults(limit).setFirstResult(offset).getResultList();
     }
 
     @Override
     public User getUserById(long id) {
-            return entityManager.find(User.class, id);
+        return entityManager.find(User.class, id);
     }
 
     @Override

@@ -30,9 +30,9 @@ public class BasicValidator {
 
     private String validateTagNames(String tagNamesAsString) {
         List<String> validatedTags = new ArrayList<>();
-        String[] tagNames = tagNamesAsString.split(",");
+        String[] tagNames = tagNamesAsString.split(Constants.COMMA);
         for (String tagName : tagNames) {
-            validateStringField(tagName, "tag name");
+            validateStringField(tagName, Constants.TAG_NAME);
             validatedTags.add(tagName.trim().toLowerCase());
         }
         return String.join(Constants.COMMA, validatedTags.toArray(new String[0]));
@@ -70,10 +70,15 @@ public class BasicValidator {
     }
 
     public void validateOrderParams(Map<String, String> params) {
-        if (params.containsKey(Constants.USER_ID)) {
-            if (NumberUtils.isParsable(params.get(Constants.USER_ID))) {
+        if (params.containsKey(Constants.USER_ID)&&StringUtils.hasText(params.get(Constants.USER_ID))){
+
+            if (NumberUtils.isDigits(params.get(Constants.USER_ID))) {
                 validateIdIsPositive(Long.parseLong(params.get(Constants.USER_ID)));
+            }else{
+                throw new ValidationException("50104", "userId");
             }
+        }else {
+            params.remove(Constants.USER_ID);
         }
     }
 
@@ -87,6 +92,7 @@ public class BasicValidator {
         private static final String EQUAL_SIGN = " = ";
         private static final String COMMA = ",";
         private static final String TAG_PARAM = "tag";
+        private static final String TAG_NAME = "tag name";
         private static final String USER_ID = "userId";
     }
 }

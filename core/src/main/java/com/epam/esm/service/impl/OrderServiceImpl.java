@@ -68,8 +68,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getOrders(Map<String, String> params) {
+        System.out.println(params.get("userId"));
         paginationValidator.validatePaginationParams(params);
         basicValidator.validateOrderParams(params);
+        if (params.containsKey("userId")) {
+            userService.getUserById(Long.parseLong(params.get("userId")));
+        }
         List<SearchSpecification> specifications = orderSpecificationCreator.generateQuery(params);
         List<OrderDto> orders = new ArrayList<>();
         int limit = Integer.parseInt(params.get("size"));

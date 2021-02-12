@@ -44,8 +44,8 @@ public class HateoasBuilder {
         tagDTO.add(linkTo(methodOn(TagController.class)
                 .findTagById(tagDTO.getId()))
                 .withSelfRel());
-        tagDTO.add(createLinkToGetCertificates("tag",
-                tagDTO.getName(), "certificates"));
+        tagDTO.add(createLinkToGetCertificates(Constant.TAG,
+                tagDTO.getName(), Constant.CERTIFICATES));
         return tagDTO;
     }
 
@@ -58,16 +58,6 @@ public class HateoasBuilder {
         List<Link> links = paginationPreparer.preparePaginationLinks(
                 methodOn(CertificateController.class).findAllCertificates(params),
                 params, certificatesCount);
-        if (!certificates.isEmpty()&&certificates.size()>1) {
-            links.add(createLinkToGetCertificates("orderBy",
-                    "name", "sort by name asc"));
-            links.add(createLinkToGetCertificates("orderBy",
-                    "-name", "sort by name desc"));
-            links.add(createLinkToGetCertificates("orderBy",
-                    "date", "sort by create date asc"));
-            links.add(createLinkToGetCertificates("orderBy",
-                    "-date", "sort by create date desc"));
-        }
         CollectionModel<CertificateDto> collectionModel = CollectionModel.of(certificates);
         return buildModel(collectionModel, links, page);
     }
@@ -95,10 +85,10 @@ public class HateoasBuilder {
                 .getUserById(userDto.getId()))
                 .withSelfRel());
         Map<String, String> params = new HashMap<>();
-        params.put("userId", String.valueOf(userDto.getId()));
+        params.put(Constant.USER_ID, String.valueOf(userDto.getId()));
         userDto.add(linkTo(methodOn(OrderController.class)
                 .getAllOrders(params))
-                .withRel("orders"));
+                .withRel(Constant.ORDERS));
         return userDto;
     }
 
@@ -118,10 +108,10 @@ public class HateoasBuilder {
                 .findCertificateById(certificate.getId()))
                 .withSelfRel()));
         Map<String, String> params = new HashMap<>();
-        params.put("userId", String.valueOf(orderDto.getUserId()));
+        params.put(Constant.USER_ID, String.valueOf(orderDto.getUserId()));
         orderDto.add(linkTo(methodOn(OrderController.class)
                 .getAllOrders(params))
-                .withRel("users orders"));
+                .withRel(Constant.USERS_ORDERS));
         return orderDto;
     }
 
@@ -137,9 +127,17 @@ public class HateoasBuilder {
         return HalModelBuilder
                 .halModelOf(entity)
                 .links(links)
-                .embed(embeddedEntity, LinkRelation.of("page"))
+                .embed(embeddedEntity, LinkRelation.of(Constant.PAGE))
                 .build();
     }
 
+    private static class Constant {
+        private final static String PAGE = "page";
+        private final static String TAG = "tag";
+        private final static String CERTIFICATES = "certificates";
+        private final static String USER_ID = "userId";
+        private final static String ORDERS = "orders";
+        private final static String USERS_ORDERS = "user's orders";
+    }
 
 }

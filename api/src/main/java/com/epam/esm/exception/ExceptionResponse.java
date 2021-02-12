@@ -1,11 +1,14 @@
 package com.epam.esm.exception;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.hateoas.Link;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExceptionResponse {
     private final LocalDateTime localDateTime;
@@ -19,34 +22,14 @@ public class ExceptionResponse {
         this.code = code;
         this.error = error;
         this.message = message;
-        this.path=path;
-        localDateTime=LocalDateTime.now(ZoneOffset.UTC);
+        this.path = path;
+        localDateTime = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public ExceptionResponse(String code, String error, String message) {
         this.code = code;
         this.error = error;
         this.message = message;
-        localDateTime=LocalDateTime.now(ZoneOffset.UTC);
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getPath() {
-        return path;
+        localDateTime = LocalDateTime.now(ZoneOffset.UTC);
     }
 }

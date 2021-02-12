@@ -17,7 +17,7 @@ public class GetCertificatesByName implements SearchSpecification {
     }
 
     @Override
-    public <T> Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root<T> root) {
+    public Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root root) {
         return criteriaBuilder.like(criteriaBuilder.lower(
                 root.get("name")), "%" + name.toLowerCase() + "%");
     }

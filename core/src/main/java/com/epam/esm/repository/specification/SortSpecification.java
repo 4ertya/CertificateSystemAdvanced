@@ -6,5 +6,5 @@ import javax.persistence.criteria.Root;
 
 public interface SortSpecification extends Specification {
 
-    <T> Order toOrder(CriteriaBuilder criteriaBuilder, Root<T> root);
+    Order toOrder(CriteriaBuilder criteriaBuilder, Root root);
 }

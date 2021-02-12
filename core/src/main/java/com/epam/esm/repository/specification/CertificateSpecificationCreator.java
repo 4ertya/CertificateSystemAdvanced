@@ -11,8 +11,9 @@ public class CertificateSpecificationCreator {
 
     private List<Specification> specifications;
     private final Map<String, String> orderByQueries;
+
     {
-        orderByQueries=new HashMap<>();
+        orderByQueries = new HashMap<>();
         orderByQueries.put(CreatorParams.SORT_BY_NAME_ASC, CreatorParams.NAME_FIELD);
         orderByQueries.put(CreatorParams.SORT_BY_NAME_DESC, CreatorParams.NAME_FIELD);
         orderByQueries.put(CreatorParams.SORT_BY_DATE_ASC, CreatorParams.CREATED_DATE_FIELD);
@@ -40,8 +41,9 @@ public class CertificateSpecificationCreator {
         });
         return specifications;
     }
+
     private void addTagNamePredicate(String tagNamesAsString) {
-        String[] tagNames = tagNamesAsString.split(",");
+        String[] tagNames = tagNamesAsString.split(CreatorParams.COMMA);
         for (String tagName : tagNames) {
             specifications.add(new GetCertificatesByTagName(tagName.trim()));
         }
@@ -69,5 +71,6 @@ public class CertificateSpecificationCreator {
         private static final String SORT_BY_DATE_DESC = "-date";
         private static final String NAME_FIELD = "name";
         private static final String CREATED_DATE_FIELD = "createDate";
+        private static final String COMMA = ",";
     }
 }

@@ -14,10 +14,6 @@ public class UserMapper {
 
     private final ModelMapper mapper;
 
-    public User toModel(UserDto dto) {
-        return Objects.isNull(dto) ? null : mapper.map(dto, User.class);
-    }
-
     public UserDto toDTO(User model) {
         return Objects.isNull(model) ? null : mapper.map(model, UserDto.class);
     }

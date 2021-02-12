@@ -6,5 +6,5 @@ import javax.persistence.criteria.Root;
 
 public interface SearchSpecification extends Specification {
 
-    <T> Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root<T> root);
+     Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root root);
 }

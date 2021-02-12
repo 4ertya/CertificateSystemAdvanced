@@ -7,6 +7,7 @@ import com.epam.esm.mapper.UserMapper;
 import com.epam.esm.model.User;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.UserService;
+import com.epam.esm.validation.PaginationValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PaginationValidator paginationValidator;
 
     @Override
     public List<UserDto> getUsers(Map<String, String> params) {
+        paginationValidator.validatePaginationParams(params);
+        long count = userRepository.getCount();
+        paginationValidator.validatePageNumber(params,count);
         List<UserDto> userDTOS = new ArrayList<>();
         int limit = Integer.parseInt(params.get("size"));
         int offset = (Integer.parseInt(params.get("page")) - 1) * limit;

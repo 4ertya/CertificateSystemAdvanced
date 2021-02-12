@@ -1,7 +1,6 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.CertificateDto;
-import com.epam.esm.model.Certificate;
 
 import java.util.List;
 import java.util.Map;

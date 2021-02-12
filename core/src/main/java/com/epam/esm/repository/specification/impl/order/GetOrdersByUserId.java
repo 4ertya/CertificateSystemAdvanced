@@ -16,7 +16,7 @@ public class GetOrdersByUserId implements SearchSpecification {
     }
 
     @Override
-    public <T> Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root<T> root) {
+    public Predicate toPredicate(CriteriaBuilder criteriaBuilder, Root root) {
         return criteriaBuilder.equal(root.get("userId"), userId);
     }
 }

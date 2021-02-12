@@ -10,13 +10,9 @@ public interface CertificateRepository {
 
     List<Certificate> findAllCertificates(List<Specification> specifications, int limit, int offset);
 
-//    List<Certificate> findAllCertificatesBySpecification(Specification specification);
-
     Certificate findCertificateById(long id);
 
     Certificate createCertificate(Certificate certificate);
-
-    void updateCertificate(Certificate certificate);
 
     void deleteCertificate(Certificate certificate);
 

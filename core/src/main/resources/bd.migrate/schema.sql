@@ -1,3 +1,5 @@
+create sequence hibernate_sequence;
+
 create table certificates
 (
     id               bigserial not null,
@@ -10,6 +12,26 @@ create table certificates
     constraint certificates_pkey
         primary key (id)
 );
+
+create table tags
+(
+    id   bigserial not null,
+    name varchar(255),
+    constraint tags_pkey
+        primary key (id),
+    constraint uk_t48xdq560gs3gap9g7jg36kgc
+        unique (name)
+);
+
+create table users
+(
+    id      bigserial not null,
+    name    varchar(255),
+    surname varchar(255),
+    constraint users_pkey
+        primary key (id)
+);
+
 
 create table orders
 (
@@ -33,15 +55,6 @@ create table orders_certificates
             on delete cascade
 );
 
-create table tags
-(
-    id   bigserial not null,
-    name varchar(255),
-    constraint tags_pkey
-        primary key (id),
-    constraint uk_t48xdq560gs3gap9g7jg36kgc
-        unique (name)
-);
 
 create table certificates_tags
 (
@@ -56,14 +69,7 @@ create table certificates_tags
             on delete cascade
 );
 
-create table users
-(
-    id      bigserial not null,
-    name    varchar(255),
-    surname varchar(255),
-    constraint users_pkey
-        primary key (id)
-);
+
 
 create table revinfo
 (
@@ -139,3 +145,4 @@ create table tags_audit_log
     constraint fki9wtlk9lxo7eiek366uku65he
         foreign key (rev) references revinfo
 );
+

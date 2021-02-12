@@ -48,12 +48,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagDto findTagByName(String name) {
-        Tag tag = tagRepository.findTagByName(name);
-        return tagMapper.toDTO(tag);
-    }
-
-    @Override
     public TagDto createTag(TagDto tagDto) {
         entityValidator.validateTag(tagDto);
         tagDto.setId(null);
