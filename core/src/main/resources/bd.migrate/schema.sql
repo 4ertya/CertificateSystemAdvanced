@@ -19,7 +19,7 @@ create table tags
     name varchar(255),
     constraint tags_pkey
         primary key (id),
-    constraint uk_t48xdq560gs3gap9g7jg36kgc
+    constraint uk_name
         unique (name)
 );
 
@@ -47,10 +47,10 @@ create table orders_certificates
 (
     orders_id       bigint not null,
     certificates_id bigint not null,
-    constraint fk80siohi4i1dhggs033y44gh97
+    constraint fk_orders_id
         foreign key (orders_id) references orders
             on delete cascade,
-    constraint fkp6i5e02pjwpiqhxgr6pacoktw
+    constraint fk_certificates_id
         foreign key (certificates_id) references certificates
             on delete cascade
 );
@@ -62,9 +62,9 @@ create table certificates_tags
     tags_id         bigint not null,
     constraint certificates_tags_pkey
         primary key (certificates_id, tags_id),
-    constraint fk7rhfn769tsnnq5e0mbtnglh6w
+    constraint fk_certificates_id
         foreign key (certificates_id) references certificates,
-    constraint fks9jnjgsosxmo7mrpqyipfag78
+    constraint fk_tags_id
         foreign key (tags_id) references tags
             on delete cascade
 );
@@ -92,7 +92,7 @@ create table certificates_audit_log
     price            numeric(19, 2),
     constraint certificates_audit_log_pkey
         primary key (id, rev),
-    constraint fkqwbymh7o15dgqmsok0ssh854k
+    constraint fk_revinfo
         foreign key (rev) references revinfo
 );
 
@@ -104,7 +104,7 @@ create table certificates_tags_audit_log
     revtype         smallint,
     constraint certificates_tags_audit_log_pkey
         primary key (rev, certificates_id, tags_id),
-    constraint fk94nfdnxer5aiw9oivq3f191gy
+    constraint fk_revinfo
         foreign key (rev) references revinfo
 );
 
@@ -118,7 +118,7 @@ create table orders_audit_log
     user_id    bigint,
     constraint orders_audit_log_pkey
         primary key (id, rev),
-    constraint fkbvower78ft1i7rt78rujoky5s
+    constraint fk_revinfo
         foreign key (rev) references revinfo
 );
 
@@ -130,7 +130,7 @@ create table orders_certificates_audit_log
     revtype         smallint,
     constraint orders_certificates_audit_log_pkey
         primary key (rev, orders_id, certificates_id),
-    constraint fkgphj0sjolumndb3cx0kqxtodh
+    constraint fk_revinfo
         foreign key (rev) references revinfo
 );
 
@@ -142,7 +142,7 @@ create table tags_audit_log
     name    varchar(255),
     constraint tags_audit_log_pkey
         primary key (id, rev),
-    constraint fki9wtlk9lxo7eiek366uku65he
+    constraint fk_revinfo
         foreign key (rev) references revinfo
 );
 

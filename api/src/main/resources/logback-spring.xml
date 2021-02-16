@@ -14,7 +14,7 @@
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="com.epam.esm" level="trace" additivity="false">
+    <logger name="com.epam.esm" level="info" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
 

@@ -21,7 +21,7 @@ public class OrderController {
     private final HateoasBuilder hateoasBuilder;
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto createOrder(@RequestBody NewOrderDto newOrderDto) {
         OrderDto orderDTO = orderService.addOrder(newOrderDto);
@@ -30,7 +30,7 @@ public class OrderController {
 
 
     @GetMapping
-    public RepresentationModel<?> getAllOrders(@RequestParam Map<String, String> params) {
+    public RepresentationModel getAllOrders(@RequestParam Map<String, String> params) {
         List<OrderDto> orders = orderService.getOrders(params);
         long ordersCount = orderService.getCount(params);
         return hateoasBuilder.addLinksForListOfOrders(orders, params, ordersCount);

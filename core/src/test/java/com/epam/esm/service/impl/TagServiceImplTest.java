@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dto.TagDto;
+import com.epam.esm.exception.EntityNotFoundException;
 import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.model.Tag;
 import com.epam.esm.repository.TagRepository;
@@ -20,9 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -38,7 +39,7 @@ class TagServiceImplTest {
     @Mock
     EntityValidator entityValidator;
     @Spy
-    private TagMapper mapper = new TagMapper(new ModelMapper());
+    private final TagMapper mapper = new TagMapper(new ModelMapper());
 
     @Test
     void findAllTags() {
@@ -63,16 +64,26 @@ class TagServiceImplTest {
         tagDTOs.add(tagDTO2);
         when(tagRepository.findAllTags(10, 0)).thenReturn(tags);
         Assertions.assertEquals(tagDTOs, tagService.findAllTags(new HashMap<>()));
+        verify(paginationValidator).validatePaginationParams(any());
+        verify(mapper, times(2)).toDTO(any());
     }
 
     @Test
     void findTagById() {
         Tag tag = new Tag();
         tag.setId(1L);
-        tag.setName("entertainment");
+        tag.setName("tagName");
         when(tagRepository.findTagById(1)).thenReturn(tag);
         TagDto returnedTag = tagService.findTagById(1);
         assertEquals(tag.getName(), returnedTag.getName());
+        verify(basicValidator).validateIdIsPositive(1);
+    }
+
+    @Test
+    void findTagByIdUnsuccessful() {
+        when(tagRepository.findTagById(1)).thenReturn(null);
+        assertThrows(EntityNotFoundException.class, () -> tagService.findTagById(1));
+        verify(basicValidator).validateIdIsPositive(1);
     }
 
 
@@ -89,6 +100,7 @@ class TagServiceImplTest {
         tagDto.setName(tag.getName());
         TagDto tagDTOReturned = tagService.createTag(tagDto);
         assertEquals(tagDTOReturned.getId(), tagReturned.getId());
+        verify(entityValidator).validateTag(any());
     }
 
     @Test

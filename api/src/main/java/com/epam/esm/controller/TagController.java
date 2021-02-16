@@ -21,7 +21,7 @@ public class TagController {
     private final HateoasBuilder hateoasBuilder;
 
     @GetMapping
-    public RepresentationModel<?> findAllTags(@RequestParam Map<String, String> params) {
+    public RepresentationModel findAllTags(@RequestParam Map<String, String> params) {
         List<TagDto> tags = tagService.findAllTags(params);
         long tagsCount = tagService.getCount();
         return hateoasBuilder.addLinksForListOfTagDTOs(tags, params, tagsCount);
@@ -47,6 +47,7 @@ public class TagController {
         return hateoasBuilder.addLinksForTagDTO(tag);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeTag(@PathVariable("id") long id) {
         tagService.deleteTag(id);
@@ -54,8 +55,8 @@ public class TagController {
     }
 
     @GetMapping("/most-used")
-    public TagDto findMostUsedTag(){
-        TagDto tag= tagService.getMostUsedTagOfUserWithHighestCostOfOrders();
+    public TagDto findMostUsedTag() {
+        TagDto tag = tagService.getMostUsedTagOfUserWithHighestCostOfOrders();
         return hateoasBuilder.addLinksForTagDTO(tag);
     }
 

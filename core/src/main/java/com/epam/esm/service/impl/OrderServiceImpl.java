@@ -30,6 +30,10 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    public final static String PAGE_PARAM="page";
+    public final static String SIZE_PARAM="size";
+    public final static String USER_ID_PARAM="userId";
+
     private final OrderRepository orderRepository;
     private final CertificateService certificateService;
     private final UserService userService;
@@ -68,16 +72,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getOrders(Map<String, String> params) {
-        System.out.println(params.get("userId"));
+        System.out.println(params.get(USER_ID_PARAM));
         paginationValidator.validatePaginationParams(params);
         basicValidator.validateOrderParams(params);
-        if (params.containsKey("userId")) {
-            userService.getUserById(Long.parseLong(params.get("userId")));
+        if (params.containsKey(USER_ID_PARAM)) {
+            userService.getUserById(Long.parseLong(params.get(USER_ID_PARAM)));
         }
         List<SearchSpecification> specifications = orderSpecificationCreator.generateQuery(params);
         List<OrderDto> orders = new ArrayList<>();
-        int limit = Integer.parseInt(params.get("size"));
-        int offset = (Integer.parseInt(params.get("page")) - 1) * limit;
+        int limit = Integer.parseInt(params.get(SIZE_PARAM));
+        int offset = (Integer.parseInt(params.get(PAGE_PARAM)) - 1) * limit;
         long elementsCount = orderRepository.getCount(specifications);
         paginationValidator.validatePageNumber(params, elementsCount);
         orderRepository.getOrders(specifications, limit, offset)

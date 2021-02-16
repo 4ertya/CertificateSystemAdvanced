@@ -85,6 +85,6 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Tag getMostUsedTagOfUserWithHighestCostOfOrders() {
-        return (Tag) entityManager.createNativeQuery(SELECT_MOST_USED_TAG).getSingleResult();
+        return (Tag) entityManager.createNativeQuery(SELECT_MOST_USED_TAG, Tag.class).getSingleResult();
     }
 }

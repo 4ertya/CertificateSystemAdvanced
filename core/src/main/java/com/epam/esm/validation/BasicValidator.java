@@ -35,7 +35,7 @@ public class BasicValidator {
             validateStringField(tagName, Constants.TAG_NAME);
             validatedTags.add(tagName.trim().toLowerCase());
         }
-        return String.join(Constants.COMMA, validatedTags.toArray(new String[0]));
+        return String.join(Constants.COMMA, validatedTags);
     }
 
     public void checkOrderByParams(Map<String, String> params) {

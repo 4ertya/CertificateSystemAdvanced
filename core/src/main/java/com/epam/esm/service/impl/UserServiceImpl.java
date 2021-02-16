@@ -19,6 +19,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    public final static String PAGE_PARAM="page";
+    public final static String SIZE_PARAM="size";
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PaginationValidator paginationValidator;
@@ -29,8 +32,8 @@ public class UserServiceImpl implements UserService {
         long count = userRepository.getCount();
         paginationValidator.validatePageNumber(params,count);
         List<UserDto> userDTOS = new ArrayList<>();
-        int limit = Integer.parseInt(params.get("size"));
-        int offset = (Integer.parseInt(params.get("page")) - 1) * limit;
+        int limit = Integer.parseInt(params.get(SIZE_PARAM));
+        int offset = (Integer.parseInt(params.get(PAGE_PARAM)) - 1) * limit;
         userRepository.getUsers(limit, offset).forEach(user -> userDTOS.add(userMapper.toDTO(user)));
         return userDTOS;
     }

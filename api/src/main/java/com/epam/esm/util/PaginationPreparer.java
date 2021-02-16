@@ -14,22 +14,23 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class PaginationPreparer {
 
     public List<Link> preparePaginationLinks(Object invocationValue, Map<String, String> params, long entityCount) {
+        int firstPage=1;
         int currentPage = getPageNumber(params);
         long pageCount = calculatePageCount(params, entityCount);
         List<Link> links = new ArrayList<>();
-        if (pageCount != 1 && currentPage != 1) {
-            params.replace(Constant.PAGE, String.valueOf(1));
+        if (pageCount != firstPage && currentPage != firstPage) {
+            params.replace(Constant.PAGE, String.valueOf(firstPage));
             links.add(linkTo(invocationValue).withRel(Constant.FIRST_PAGE));
         }
         if (currentPage != pageCount) {
-            params.replace(Constant.PAGE, String.valueOf(currentPage + 1));
+            params.replace(Constant.PAGE, String.valueOf(currentPage + firstPage));
             links.add(linkTo(invocationValue).withRel(Constant.NEXT_PAGE));
         }
-        if (currentPage != 1) {
-            params.replace(Constant.PAGE, String.valueOf(currentPage - 1));
+        if (currentPage != firstPage) {
+            params.replace(Constant.PAGE, String.valueOf(currentPage - firstPage));
             links.add(linkTo(invocationValue).withRel(Constant.PREVIOUS_PAGE));
         }
-        if (pageCount != 1 && currentPage != pageCount) {
+        if (pageCount != firstPage && currentPage != pageCount) {
             params.replace(Constant.PAGE, String.valueOf(pageCount));
             links.add(linkTo(invocationValue).withRel(Constant.LAST_PAGE));
         }

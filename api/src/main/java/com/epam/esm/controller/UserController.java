@@ -20,14 +20,14 @@ public class UserController {
     private final HateoasBuilder hateoasBuilder;
 
     @GetMapping
-    public RepresentationModel<?> getUsers(@RequestParam Map<String, String> params) {
+    public RepresentationModel getUsers(@RequestParam Map<String, String> params) {
         List<UserDto> users = userService.getUsers(params);
         long usersCount = userService.getCount();
         return hateoasBuilder.addLinksForListOfUsers(users, params, usersCount);
     }
 
     @GetMapping("/{id}")
-    public RepresentationModel<?> getUserById(@PathVariable("id") long id) {
+    public RepresentationModel getUserById(@PathVariable("id") long id) {
         UserDto userDTO = userService.getUserById(id);
         return hateoasBuilder.addLinksForUser(userDTO);
     }

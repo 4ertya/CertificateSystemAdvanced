@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
+
+    public final static String PAGE_PARAM="page";
+    public final static String SIZE_PARAM="size";
+
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
     private final PaginationValidator paginationValidator;
@@ -32,8 +36,8 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDto> findAllTags(Map<String, String> params) {
         paginationValidator.validatePaginationParams(params);
-        int limit = Integer.parseInt(params.get("size"));
-        int offset = (Integer.parseInt(params.get("page")) - 1) * limit;
+        int limit = Integer.parseInt(params.get(SIZE_PARAM));
+        int offset = (Integer.parseInt(params.get(PAGE_PARAM)) - 1) * limit;
         return tagRepository.findAllTags(limit, offset).stream().map(tagMapper::toDTO).collect(Collectors.toList());
     }
 

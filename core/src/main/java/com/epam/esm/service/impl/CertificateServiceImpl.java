@@ -9,8 +9,8 @@ import com.epam.esm.mapper.TagMapper;
 import com.epam.esm.model.Certificate;
 import com.epam.esm.model.Tag;
 import com.epam.esm.repository.CertificateRepository;
-import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.specification.CertificateSpecificationCreator;
+import com.epam.esm.repository.TagRepository;
 import com.epam.esm.repository.specification.Specification;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.validation.BasicValidator;
@@ -27,6 +27,9 @@ import java.util.*;
 @RequiredArgsConstructor
 @Transactional
 public class CertificateServiceImpl implements CertificateService {
+
+    public final static String PAGE_PARAM="page";
+    public final static String SIZE_PARAM="size";
 
     private final CertificateRepository certificateRepository;
     private final TagRepository tagRepository;
@@ -47,8 +50,8 @@ public class CertificateServiceImpl implements CertificateService {
         long elementsCount = certificateRepository.getCount(specifications);
         paginationValidator.validatePageNumber(params, elementsCount);
         List<CertificateDto> certificates = new ArrayList<>();
-        int limit = Integer.parseInt(params.get("size"));
-        int offset = (Integer.parseInt(params.get("page")) - 1) * limit;
+        int limit = Integer.parseInt(params.get(SIZE_PARAM));
+        int offset = (Integer.parseInt(params.get(PAGE_PARAM)) - 1) * limit;
         certificateRepository.findAllCertificates(specifications, limit, offset).forEach(giftCertificate ->
                 certificates.add(certificateMapper.toDTO(giftCertificate)));
         return certificates;

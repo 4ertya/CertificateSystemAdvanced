@@ -22,7 +22,7 @@ public class CertificateController {
     private final HateoasBuilder hateoasBuilder;
 
     @GetMapping
-    public RepresentationModel<?> findAllCertificates(@RequestParam Map<String, String> params) {
+    public RepresentationModel findAllCertificates(@RequestParam Map<String, String> params) {
         List<CertificateDto> certificates = certificateService.findCertificates(params);
         long certificatesCount = certificateService.getCount(params);
         return hateoasBuilder.addLinksForListOfCertificates(certificates, params, certificatesCount);
@@ -34,6 +34,7 @@ public class CertificateController {
         return hateoasBuilder.addLinksForCertificate(certificate);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public CertificateDto createCertificate(@RequestBody CertificateDto certificateDto) {
         CertificateDto certificate = certificateService.createCertificate(certificateDto);
@@ -47,6 +48,7 @@ public class CertificateController {
         return hateoasBuilder.addLinksForCertificate(certificate);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCertificate(@PathVariable long id) {
         certificateService.deleteCertificate(id);
