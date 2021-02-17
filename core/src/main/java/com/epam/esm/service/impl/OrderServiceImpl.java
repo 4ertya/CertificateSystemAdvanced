@@ -30,9 +30,9 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    public final static String PAGE_PARAM="page";
-    public final static String SIZE_PARAM="size";
-    public final static String USER_ID_PARAM="userId";
+    public final static String PAGE_PARAM = "page";
+    public final static String SIZE_PARAM = "size";
+    public final static String USER_ID_PARAM = "userId";
 
     private final OrderRepository orderRepository;
     private final CertificateService certificateService;
@@ -72,7 +72,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getOrders(Map<String, String> params) {
-        System.out.println(params.get(USER_ID_PARAM));
         paginationValidator.validatePaginationParams(params);
         basicValidator.validateOrderParams(params);
         if (params.containsKey(USER_ID_PARAM)) {

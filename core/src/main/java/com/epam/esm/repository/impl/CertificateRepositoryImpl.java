@@ -27,14 +27,12 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @Override
     public List<Certificate> findAllCertificates(List<Specification> specifications, int limit, int offset) {
-        System.out.println(entityManager.getDelegate());
         return entityManager.createQuery(buildCriteriaQuery(specifications))
                 .setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
     public Certificate findCertificateById(long id) {
-        System.out.println(entityManager.getDelegate());
         return entityManager.find(Certificate.class, id);
     }
 
@@ -62,10 +60,11 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         criteriaQuery.orderBy(criteriaBuilder.asc(root.get(ID)));
         List<Predicate> predicateList = new ArrayList<>();
         specifications.forEach(specification -> {
-            if (specification instanceof SearchSpecification)
+            if (specification.getClass().getInterfaces()[0].getSimpleName().equals("SearchSpecification")) {
                 predicateList.add(((SearchSpecification) specification).toPredicate(criteriaBuilder, root));
-            if (specification instanceof SortSpecification)
+            } else {
                 criteriaQuery.orderBy(((SortSpecification) specification).toOrder(criteriaBuilder, root));
+            }
         });
         criteriaQuery.where(predicateList.toArray(new Predicate[0])).groupBy(root.get(ID));
         return criteriaQuery;

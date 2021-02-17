@@ -29,7 +29,7 @@ public class CertificateController {
     }
 
     @GetMapping("/{id}")
-    public RepresentationModel<?> findCertificateById(@PathVariable long id) {
+    public RepresentationModel findCertificateById(@PathVariable long id) {
         CertificateDto certificate = certificateService.findCertificateById(id);
         return hateoasBuilder.addLinksForCertificate(certificate);
     }
